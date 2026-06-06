@@ -34,6 +34,10 @@ public class UserService {
                 passwordEncoder.encode(user.getPassword())
         );
 
+        if(user.getRole() == null) {
+            user.setRole("USER");
+        }
+
         return userRepository.save(user);
     }
 
@@ -47,7 +51,11 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (passwordEncoder.matches(password, user.getPassword())) {
-            return jwtService.generateToken(email);
+            return jwtService.generateToken(
+                user.getEmail(),
+                user.getRole()
+            );
+            
         } else {
             throw new RuntimeException("Invalid credentials");
         }
