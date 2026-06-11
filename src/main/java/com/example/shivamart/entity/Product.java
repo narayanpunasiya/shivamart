@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 @Entity
@@ -22,8 +23,10 @@ public class Product {
 
   private String description;
 
-  @Column(nullable = false)
-  private String type;
+  @JsonBackReference
+  @ManyToOne
+  @JoinColumn(name = "category_id")
+  private Category category;
 
   @Column(nullable = false)
   private BigDecimal price;

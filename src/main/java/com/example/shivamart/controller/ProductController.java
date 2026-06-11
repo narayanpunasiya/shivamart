@@ -10,7 +10,7 @@ import lombok.*;
 
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -18,6 +18,7 @@ public class ProductController {
 
 @PostMapping
   public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    System.out.println("CREATE PRODUCT API HIT");
     Product createdProduct = productService.createProduct(product);
     return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
   }
