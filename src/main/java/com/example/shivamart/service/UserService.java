@@ -1,6 +1,6 @@
 package com.example.shivamart.service;
 
-import com.example.shivamart.entity.User;
+import com.example.shivamart.entity.*;
 import com.example.shivamart.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
@@ -34,10 +34,9 @@ public class UserService {
                 passwordEncoder.encode(user.getPassword())
         );
 
-        if(user.getRole() == null) {
-            user.setRole("USER");
-        }
-
+        
+        user.setRole(Role.CUSTOMER);
+        
         return userRepository.save(user);
     }
 

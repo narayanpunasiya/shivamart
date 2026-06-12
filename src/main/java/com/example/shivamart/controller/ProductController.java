@@ -7,6 +7,7 @@ import java.util.List;
 import com.example.shivamart.entity.Product;
 import com.example.shivamart.service.ProductService;
 import lombok.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 
 @RestController
@@ -16,6 +17,7 @@ public class ProductController {
 
   private final ProductService productService;
 
+@PreAuthorize("hasRole('ADMIN')")
 @PostMapping
   public ResponseEntity<Product> createProduct(@RequestBody Product product) {
     System.out.println("CREATE PRODUCT API HIT");
@@ -39,6 +41,7 @@ public class ProductController {
     }
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
     Product updatedProduct = productService.updateProduct(id, product);
@@ -49,6 +52,7 @@ public class ProductController {
     }
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
     productService.deleteProduct(id);
