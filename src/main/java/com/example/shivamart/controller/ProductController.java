@@ -20,18 +20,20 @@ public class ProductController {
 @PreAuthorize("hasRole('ADMIN')")
 @PostMapping
   public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-    System.out.println("CREATE PRODUCT API HIT");
+    // System.out.println("CREATE PRODUCT API HIT");
     Product createdProduct = productService.createProduct(product);
     return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
   }
 
   @GetMapping
+  @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
   public ResponseEntity<List<Product>> getAllProducts() {
     List<Product> products = productService.getAllProducts();
     return ResponseEntity.ok(products);
   }
 
   @GetMapping("/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
   public ResponseEntity<Product> getProductById(@PathVariable Long id) {
     Product product = productService.getProductById(id);
     if (product != null) {

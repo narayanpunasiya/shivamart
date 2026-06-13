@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data; 
 import lombok.NoArgsConstructor;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Data
 @Entity
@@ -22,6 +24,7 @@ public class Cart {
   @JoinColumn(name = "user_id", unique = true)
   private User user;
 
+  @JsonManagedReference
   @OneToMany(
     mappedBy = "cart", 
     cascade = CascadeType.ALL, 

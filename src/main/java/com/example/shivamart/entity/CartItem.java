@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Data
@@ -17,6 +18,7 @@ public class CartItem {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @JsonBackReference
   @ManyToOne
   @JoinColumn(name = "cart_id")
   private Cart cart;

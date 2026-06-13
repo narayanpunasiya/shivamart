@@ -1,12 +1,17 @@
 package com.example.shivamart.service.impl;
 
+import com.example.shivamart.entity.Cart;
+import com.example.shivamart.entity.CartItem;
+import com.example.shivamart.entity.Product;
+import com.example.shivamart.entity.User;
+import com.example.shivamart.repository.CartItemRepository;
+import com.example.shivamart.repository.CartRepository;
+import com.example.shivamart.repository.ProductRepository;
+import com.example.shivamart.repository.UserRepository;
 import com.example.shivamart.service.CartService;
-import com.example.shivamart.entity.*;
-import com.example.shivamart.repository.*;
-
-
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -54,28 +59,56 @@ public class CartServiceImpl implements CartService {
                     return cartRepository.save(newCart);
                 });
 
-        CartItem cartItem = new CartItem();
+        CartItem existingItem = cart.getItems()
+                .stream()
+                .filter(item ->
+                        item.getProduct()
+                                .getId()
+                                .equals(productId))
+                .findFirst()
+                .orElse(null);
 
-        cartItem.setCart(cart);
-        cartItem.setProduct(product);
-        cartItem.setQuantity(quantity);
+        if (existingItem != null) {
 
-        cartItemRepository.save(cartItem);
+            existingItem.setQuantity(
+                    existingItem.getQuantity() + quantity);
+
+            cartItemRepository.save(existingItem);
+
+        } else {
+
+            CartItem cartItem = new CartItem();
+
+            cartItem.setCart(cart);
+            cartItem.setProduct(product);
+            cartItem.setQuantity(quantity);
+
+            cartItemRepository.save(cartItem);
+
+            cart.getItems().add(cartItem);
+        }
 
         return cartRepository.findById(cart.getId())
-                .orElseThrow();
+                .orElseThrow(() ->
+                        new RuntimeException("Cart not found"));
     }
 
     @Override
     public void removeFromCart(Long cartItemId) {
 
-        cartItemRepository.deleteById(cartItemId);
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() ->
+                        new RuntimeException("Cart Item not found"));
+
+        cartItemRepository.delete(cartItem);
     }
 
     @Override
     public void clearCart(Long userId) {
 
         Cart cart = getCart(userId);
+
+        cartItemRepository.deleteAll(cart.getItems());
 
         cart.getItems().clear();
 

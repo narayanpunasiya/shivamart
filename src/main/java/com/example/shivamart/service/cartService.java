@@ -2,7 +2,7 @@ package com.example.shivamart.service;
 
 import com.example.shivamart.entity.Cart;
 
-public interface cartService {
+public interface CartService {
 
   Cart getCart(Long userId);
 
@@ -12,5 +12,4 @@ public interface cartService {
   
   void clearCart(Long userId);
 }
-
 
